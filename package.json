@@ -1,0 +1,70 @@
+{
+  "name": "piamhss-fees-system",
+  "version": "0.1.0",
+  "private": false,
+  "homepage": ".",
+  "scripts": {
+    "dev": "next dev",
+    "electron": "electron main.js",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "nextron": "nextron main.js",
+    "nextron build": "nextron build",
+    "electron-build": "electron-builder",
+    "dist": "npm run build && npm run electron-build"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "autoprefixer": "^10.4.14",
+    "dompurify": "^3.0.5",
+    "electron-is-dev": "^2.0.0",
+    "eslint": "^8.44.0",
+    "eslint-config-next": "^13.4.9",
+    "mongoose": "^7.3.2",
+    "next": "^13.4.9",
+    "nextron": "^8.5.0",
+    "postcss": "^8.4.25",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
+    "react-modal": "^3.16.1",
+    "react-query": "^3.39.3",
+    "react-redux": "^8.1.1",
+    "react-to-print": "^2.14.13",
+    "sharp": "^0.32.5",
+    "tailwindcss": "^3.3.2"
+  },
+  "devDependencies": {
+    "electron": "^25.4.0",
+    "electron-builder": "^24.6.3"
+  },
+  "build": {
+    "files": [
+      "dist/**/*",
+      "main.js"
+    ],
+    "extraResources": [
+      "src/lib/**",
+      "src/assets/**"
+    ],
+    "extraMetadata": {
+      "main": "main.js"
+    },
+    "extends": null,
+    "appId": "com.example.piamhss-fees-system",
+    "productName": "PIAMHSS Fees System",
+    "copyright": "Copyright @2021-2022 Your Name",
+    "buildVersion": "1",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

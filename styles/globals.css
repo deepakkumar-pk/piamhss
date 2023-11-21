@@ -14,3 +14,36 @@ input:checked~.dot {
     background-color: #48bb78;
 }
 
+/* PrintVoucher.css */
+
+/* Default styles for the component */
+.voucher-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.voucher {
+    flex: 0 0 calc(33.33% - 10px);
+    margin-top: 5pxpx;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+/* Landscape and A4 paper size styles for printing */
+@media print {
+    @page {
+        size: A4 landscape;
+        /* Landscape orientation and A4 size */
+        margin: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Add any additional print-specific styles here */
+}
+

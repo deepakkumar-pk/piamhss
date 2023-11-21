@@ -55,112 +55,56 @@ const PrintVoucher = ({
     });
 
     if (unpaidMonths.length > 0) {
-      return unpaidMonths.join(", ");
+      if (unpaidMonths.length > 1) {
+        return `Prev Months Fees (${unpaidMonths.join(", ")})`;
+      } else {
+        return `Prev Month Fees (${unpaidMonths.join(", ")})`;
+      }
     } else {
       return "-";
     }
   };
 
   return (
-    <div style={{ width: "595pt", height: "842pt" }}>
-      <div className="container mx-auto p-2">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex justify-center  ">
-            <div className="">
-              <Design
-                name={name}
-                fatherName={fatherName}
-                category={category}
-                studentClass={studentClass}
-                SecurityFee={SecurityFee}
-                lateFees={lateFees}
-                StationaryFee={StationaryFee}
-                IDFee={IDFee}
-                MaintenanceFee={MaintenanceFee}
-                admissionFees={admissionFees}
-                grNo={grNo}
-                CNIC={CNIC}
-                remainingAmount={getRemainingAmount()}
-                unpaidMonths={getUnpaidMonths()}
-                fees={fees}
-                newVoucherCode={newVoucherCode}
-                voucherType={"School Copy"}
-                annualFund={annualFund}
-              />
-            </div>
-          </div>
-          <div className="flex justify-center  ">
-            <div className="">
-              <Design
-                name={name}
-                fatherName={fatherName}
-                category={category}
-                studentClass={studentClass}
-                SecurityFee={SecurityFee}
-                lateFees={lateFees}
-                StationaryFee={StationaryFee}
-                IDFee={IDFee}
-                MaintenanceFee={MaintenanceFee}
-                admissionFees={admissionFees}
-                grNo={grNo}
-                CNIC={CNIC}
-                remainingAmount={getRemainingAmount()}
-                unpaidMonths={getUnpaidMonths()}
-                fees={fees}
-                newVoucherCode={newVoucherCode}
-                voucherType={"Bank Copy"}
-                annualFund={annualFund}
-              />
-            </div>
-          </div>
-          <div className="flex justify-center  ">
-            <div className="">
-              <Design
-                name={name}
-                fatherName={fatherName}
-                category={category}
-                studentClass={studentClass}
-                SecurityFee={SecurityFee}
-                lateFees={lateFees}
-                StationaryFee={StationaryFee}
-                IDFee={IDFee}
-                MaintenanceFee={MaintenanceFee}
-                admissionFees={admissionFees}
-                grNo={grNo}
-                CNIC={CNIC}
-                remainingAmount={getRemainingAmount()}
-                unpaidMonths={getUnpaidMonths()}
-                fees={fees}
-                newVoucherCode={newVoucherCode}
-                voucherType={"Student Copy"}
-                annualFund={annualFund}
-              />
-            </div>
-          </div>
-          <div className="flex justify-center ">
-            <div className="">
-              <Design
-                name={name}
-                fatherName={fatherName}
-                category={category}
-                studentClass={studentClass}
-                SecurityFee={SecurityFee}
-                lateFees={lateFees}
-                StationaryFee={StationaryFee}
-                IDFee={IDFee}
-                MaintenanceFee={MaintenanceFee}
-                admissionFees={admissionFees}
-                grNo={grNo}
-                CNIC={CNIC}
-                remainingAmount={getRemainingAmount()}
-                unpaidMonths={getUnpaidMonths()}
-                fees={fees}
-                newVoucherCode={newVoucherCode}
-                voucherType={"Accounts Copy"}
-                annualFund={annualFund}
-              />
-            </div>
-          </div>
+    <div className="voucher-container">
+      <div className="p-2 mx-auto  ">
+        <div className="grid grid-cols-3 items-center">
+          {Array(3)
+            .fill()
+            .map((_, index) => (
+              <div key={index} className="voucher">
+                <div className="flex justify-center">
+                  <div>
+                    <Design
+                      name={name}
+                      fatherName={fatherName}
+                      category={category}
+                      studentClass={studentClass}
+                      SecurityFee={SecurityFee}
+                      lateFees={lateFees}
+                      StationaryFee={StationaryFee}
+                      IDFee={IDFee}
+                      MaintenanceFee={MaintenanceFee}
+                      admissionFees={admissionFees}
+                      grNo={grNo}
+                      CNIC={CNIC}
+                      remainingAmount={getRemainingAmount()}
+                      unpaidMonths={getUnpaidMonths()}
+                      fees={fees}
+                      newVoucherCode={newVoucherCode}
+                      voucherType={
+                        index === 0
+                          ? "School Copy"
+                          : index === 1
+                          ? "Bank Copy"
+                          : "Student Copy"
+                      }
+                      annualFund={annualFund}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
     </div>

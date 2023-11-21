@@ -25,7 +25,7 @@ const numbersInWords = [
   "Nineteen",
   "Twenty",
   "Thirty",
-  "Forty",
+  "Fourty",
   "Fifty",
   "Sixty",
   "Seventy",
@@ -47,6 +47,7 @@ const monthNames = [
   "November",
   "December",
 ];
+
 
 function convertAmountToWords(amount) {
   if (amount === 0) {
@@ -165,17 +166,21 @@ const Design = ({
 
   const amountInWords = convertAmountToWords(getTotalAmount());
 
+
+      console.log(typeof unpaidMonths);
+
+
   return (
     <>
-      <div className="grid grid-cols-2 border-solid border-gray-300 border-2 rounded-lg shadow-md">
-        <div className="col-span-2 md:col-span-1 md:col-start-1 lg:col-span-2 lg:col-start-1 ">
+      <div className="grid grid-cols-2 border-solid border-gray-300 border-2 rounded-md shadow-md">
+        <div className="col-span-2 md:col-span-1 md:col-start-1 lg:col-span-2 lg:col-start-1 px-1 py-1">
           {/* First column (70%) */}
           <div className="flex items-center justify-center">
             <div className="mr-4">
               <Image
                 src={schoolLogo}
-                width={75}
-                height={75}
+                width={100}
+                height={100}
                 alt="School Logo"
               />
             </div>
@@ -184,20 +189,20 @@ const Design = ({
             </h1>
           </div>
         </div>
-        <div className="col-span-2 md:col-span-1 md:col-start-2 lg:col-span-2 lg:col-start-3">
+        <div className="col-span-2 md:col-span-1 md:col-start-2 lg:col-span-2 lg:col-start-3 flex items-center justify-center px-1 py-1">
           {/* Second column (30%) */}
-          <div className="flex items-center justify-center">
+          <div className=" ">
             <Image src={bankLogo} width={100} height={75} alt="Bank Logo" />
           </div>
         </div>
         {/* Second row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2"
+          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
             <div className="flex items-center justify-center border-solid border-r-2">
-              <h4 className="text-sm font-medium">Voucher: {voucherType}</h4>
+              <h4 className="text-tiny font-medium ">Voucher: {voucherType}</h4>
             </div>
           </div>
           <div className="col-span-1">
@@ -210,7 +215,7 @@ const Design = ({
         </div>
         {/* Third row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-1"
+          className="col-span-2 md:col-span-2 grid grid-cols-1 py-1"
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="flex items-center justify-center">
@@ -226,7 +231,7 @@ const Design = ({
 
         {/* Fourth row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 border-b-2"
+          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 border-b-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
@@ -252,7 +257,7 @@ const Design = ({
         </div>
         {/* Fifth row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-4"
+          className="col-span-2 md:col-span-2 grid grid-cols-4 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
@@ -282,7 +287,7 @@ const Design = ({
         </div>
         {/* Sixth row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2"
+          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
@@ -298,7 +303,7 @@ const Design = ({
         </div>
         {/* Seventh row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-2"
+          className="col-span-2 md:col-span-2 grid grid-cols-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
@@ -314,7 +319,7 @@ const Design = ({
         </div>
         {/* Eighth row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 border-b-2"
+          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 border-b-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
@@ -343,7 +348,7 @@ const Design = ({
           className="col-span-2 md:col-span-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
-          <table className="w-full">
+          <table className="w-full" id="voucherTable">
             <thead>
               <tr className="bg-gray-100 border-solid border-b-2">
                 <th
@@ -407,22 +412,6 @@ const Design = ({
                   Rs {amount}=/
                 </td>
               </tr>
-              {remainingAmount > 0 && (
-                <tr>
-                  <td
-                    className="inline-flex items-center justify-center text-xs"
-                    style={{ width: "75%" }}
-                  >
-                    Prev Months Fees ({unpaidMonths})
-                  </td>
-                  <td
-                    className="inline-flex items-center justify-center text-xs"
-                    style={{ width: "25%" }}
-                  >
-                    Rs {remainingAmount}=/
-                  </td>
-                </tr>
-              )}
 
               {lateFees > 0 && (
                 <tr>
@@ -446,7 +435,7 @@ const Design = ({
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "75%" }}
                   >
-                    Other Fees (Security/Stationary/ID Card/Maintenance)
+                    Other (Security/Stationary/ID Card/Maintenance)
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"
@@ -456,8 +445,24 @@ const Design = ({
                   </td>
                 </tr>
               )}
+              {remainingAmount > 0 && (
+                <tr>
+                  <td
+                    className="inline-flex items-center justify-center text-center text-xs pl-2"
+                    style={{ width: "75%" }}
+                  >
+                   {unpaidMonths}
+                  </td>
+                  <td
+                    className="inline-flex items-center justify-center text-xs"
+                    style={{ width: "25%" }}
+                  >
+                    Rs {remainingAmount}=/
+                  </td>
+                </tr>
+              )}
             </tbody>
-            <tfoot>
+            <tfoot className="">
               <tr className="bg-gray-100 font-bold text-xs border-solid border-t-2 border-b-2">
                 <td
                   className="inline-flex items-center justify-center "
@@ -477,49 +482,49 @@ const Design = ({
         </div>
         {/* Tenth row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-1"
+          className="col-span-2 md:col-span-2 grid grid-cols-1 py-1"
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="flex items-center justify-center">
-            <h4 className="p-2 text-xs font-medium">
+            <h4 className="p-1 text-xs font-medium">
               In Words: {amountInWords} Rupees Only
             </h4>
           </div>
         </div>
         {/* Eleventh row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2"
+          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
             <div className="flex flex-col items-center justify-center border-solid border-r-2">
-              <div className="mt-14"></div>
+              <div className="mt-20"></div>
               <div className="border-b-2 w-32"></div>
-              <h4 className="text-xs font-medium mt-2">
+              <h4 className="text-xs font-medium mt-1">
                 {"Applicant's Signature"}
               </h4>
             </div>
           </div>
           <div className="col-span-1">
             <div className="flex flex-col items-center justify-center ">
-              <div className="mt-14"></div>
+              <div className="mt-20"></div>
               <div className="border-b-2 w-32"></div>
-              <h4 className="text-xs font-medium mt-2">
+              <h4 className="text-xs font-medium mt-1">
                 Bank Authorized Sign with Stamp
               </h4>
             </div>
           </div>
         </div>
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-1"
+          className="col-span-2 md:col-span-2 grid grid-cols-1 py-1"
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="flex items-center justify-center">
             <h4 className="p-2 text-xs font-medium">
-              {`Note: Payment of fees by ${
+              {`Note: Fees due by ${
                 monthNames[currentDate.getMonth()]
               } 15,${currentDate.getFullYear()}`}
-              , is mandatory to avoid a late fee of 200/=.
+              , to avoid Rs 200/= late fee.
             </h4>
           </div>
         </div>

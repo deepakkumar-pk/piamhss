@@ -1,0 +1,22 @@
+/* PrintVoucher.css */
+
+.voucher-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 297mm;
+    /* Landscape orientation */
+    height: 210mm;
+    /* Landscape orientation */
+    page-break-before: always;
+    /* Page break after each group of 3 vouchers */
+}
+
+.voucher {
+    flex: 0 0 calc(33.33% - 10px);
+    /* Three columns with a small gap */
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* Add any additional styling as needed for your vouchers */

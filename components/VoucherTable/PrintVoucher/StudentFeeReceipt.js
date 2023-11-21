@@ -66,8 +66,8 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
 
 
   return (
-    <div className="voucher-container" style={{pageBreakAfter:"always"}}>
-      <div className="container mx-auto p-2">
+    <div className="voucher-container" style={{ pageBreakAfter: "always" }}>
+      <div className="p-2 mx-auto  ">
         <div className="grid grid-cols-3 items-center">
           {Array(3)
             .fill()
@@ -84,7 +84,7 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
                       lateFees={lateFees}
                       StationaryFee={StationaryFee}
                       IDFee={IDFee}
-                      MaintenanceFee={MaintenanceFee}                      
+                      MaintenanceFee={MaintenanceFee}
                       grNo={grNo}
                       CNIC={CNIC}
                       remainingAmount={getRemainingAmount()}

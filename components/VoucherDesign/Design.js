@@ -122,6 +122,8 @@ const Design = ({
   const formattedMonth = month < 10 ? `0${month}` : month;
 
   const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
+    const expiryDate = `${'15'}/${formattedMonth}/${year}`;
+
 
   const getOtherFees = () => {
     const securityFee = parseFloat(SecurityFee) || 0;
@@ -167,7 +169,6 @@ const Design = ({
   const amountInWords = convertAmountToWords(getTotalAmount());
 
 
-      console.log(typeof unpaidMonths);
 
 
   return (
@@ -179,59 +180,26 @@ const Design = ({
             <div className="mr-4">
               <Image
                 src={schoolLogo}
-                width={100}
-                height={100}
+                width={55}
+                height={55}
                 alt="School Logo"
               />
             </div>
-            <h1 className="text-base font-bold text-green-900">
-              PIA Model Higher Secondary School
+            <h1 className="text-xl font-bold text-green-900">
+              PIA Model School
             </h1>
           </div>
         </div>
         <div className="col-span-2 md:col-span-1 md:col-start-2 lg:col-span-2 lg:col-start-3 flex items-center justify-center px-1 py-1">
           {/* Second column (30%) */}
           <div className=" ">
-            <Image src={bankLogo} width={100} height={75} alt="Bank Logo" />
-          </div>
-        </div>
-        {/* Second row */}
-        <div
-          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2 "
-          style={{ gridColumn: "span 4 / span 2" }}
-        >
-          <div className="col-span-1">
-            <div className="flex items-center justify-center border-solid border-r-2">
-              <h4 className="text-tiny font-medium ">Voucher: {voucherType}</h4>
-            </div>
-          </div>
-          <div className="col-span-1">
-            <div className="flex items-center justify-center ">
-              <h4 className="text-sm font-medium">
-                Deposit Slip No: {voucherCode}
-              </h4>
-            </div>
-          </div>
-        </div>
-        {/* Third row */}
-        <div
-          className="col-span-2 md:col-span-2 grid grid-cols-1 py-1"
-          style={{ gridColumn: "span 4 / span 2" }}
-        >
-          <div className="flex items-center justify-center">
-            <div className="text-sm font-medium">
-              {"School's Bank Account No: 1636-10029159"}
-
-              <div className="text-center text-xs font-normal">
-                Pay at Pia Transport & Overhaul Kyc, UBL Branch.
-              </div>
-            </div>
+            <Image src={bankLogo} width={75} height={75} alt="Bank Logo" />
           </div>
         </div>
 
         {/* Fourth row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 border-b-2 "
+          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
           <div className="col-span-1">
@@ -246,20 +214,48 @@ const Design = ({
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center border-solid border-r-2">
-              <h4 className="text-sm font-medium">G.R No</h4>
+              <h4 className="text-sm font-medium">Validity</h4>
             </div>
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center ">
-              <h4 className="text-sm font-medium">{grNo}</h4>
+              <h4 className="text-sm font-medium">{expiryDate}</h4>
             </div>
           </div>
         </div>
-        {/* Fifth row */}
+
+        {/* new */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-4 "
+          className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
+          <div className="col-span-1">
+            <div className="flex items-center justify-center border-solid border-r-2">
+              <h4 className="text-sm font-medium">Deposit Slip No / PV No:</h4>
+            </div>
+          </div>
+          <div className="col-span-1">
+            <div className="flex items-center justify-center">
+              <h4 className="text-sm font-medium">{voucherCode}</h4>
+            </div>
+          </div>
+        </div>
+
+        {/* Second row */}
+        <div
+          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 "
+          style={{ gridColumn: "span 4 / span 2" }}
+        >
+          <div className="col-span-1">
+            <div className="flex items-center justify-center border-solid border-r-2">
+              <h4 className="text-sm font-medium">{"Voucher"}</h4>
+            </div>
+          </div>
+          <div className="col-span-1">
+            <div className="flex items-center justify-center">
+              <h4 className="text-sm font-medium">{voucherType}</h4>
+            </div>
+          </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center border-solid border-r-2">
               <h4 className="text-sm font-medium">Fees</h4>
@@ -272,16 +268,37 @@ const Design = ({
               </h4>
             </div>
           </div>
+        </div>
+
+        {/* Third row */}
+        <div
+          className="col-span-2 md:col-span-2 grid grid-cols-1 py-1 border-solid border-t-2 border-b-2"
+          style={{ gridColumn: "span 4 / span 2" }}
+        >
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">
+              {"School's Account No: 304493724"}
+
+              <div className="text-center text-xs font-normal">
+                Pay at any UBL Branch of Pakistan.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fifth row */}
+        <div
+          className="col-span-2 md:col-span-2 grid grid-cols-2 "
+          style={{ gridColumn: "span 4 / span 2" }}
+        >
           <div className="col-span-1">
             <div className="flex items-center justify-center border-solid border-r-2">
-              <h4 className="text-sm font-medium">{"Father's CNIC"}</h4>
+              <h4 className="text-sm font-medium">G.R No / Buyer Code</h4>
             </div>
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center">
-              <h4 className={`text-${CNIC ? "xs" : "sm"} font-medium`}>
-                {CNIC ? CNIC : "-"}
-              </h4>
+              <h4 className="text-sm font-medium">{grNo}</h4>
             </div>
           </div>
         </div>
@@ -451,7 +468,7 @@ const Design = ({
                     className="inline-flex items-center justify-center text-center text-xs pl-2"
                     style={{ width: "75%" }}
                   >
-                   {unpaidMonths}
+                    {unpaidMonths}
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"
@@ -510,7 +527,7 @@ const Design = ({
               <div className="mt-20"></div>
               <div className="border-b-2 w-32"></div>
               <h4 className="text-xs font-medium mt-1">
-                Bank Authorized Sign with Stamp
+                Bank Authorized Signture
               </h4>
             </div>
           </div>

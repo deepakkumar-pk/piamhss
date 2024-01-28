@@ -19,10 +19,12 @@ const studentsSchema = new Schema({
   IDFee: Number,
   MaintenanceFee: Number,
   admissionFees: Number,
-  voucherCode: [{
-    type: Map,
-    of: String, // You can set the type of the values here
-  }],
+  voucherCode: [
+    {
+      type: Map,
+      of: String, // You can set the type of the values here
+    },
+  ],
   feesPaidMonths: [String], // New field to store fees paid months as an array of strings
 });
 

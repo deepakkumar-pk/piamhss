@@ -17,6 +17,7 @@ import { BiUserPlus, BiX, BiCheck, BiReceipt, BiUser } from "react-icons/bi";
 import { useQueryClient } from "react-query";
 import Form from "../components/Forms/Form";
 import { deleteStudent, getStudents } from "../lib/helper";
+import { signOut } from "next-auth/react";
 
 const Header = () => {
   const visible = useSelector((state) => state.app.client.toggleForm);
@@ -163,6 +164,7 @@ const Header = () => {
                 </div>
               </label>
             </div>
+            <button onClick={()=>signOut()}>Logout</button>
           </div>
         </div>
         <div className="flex items-center justify-center">

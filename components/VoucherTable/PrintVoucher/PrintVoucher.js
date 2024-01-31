@@ -67,8 +67,8 @@ const PrintVoucher = ({
 
   return (
     <div className="voucher-container">
-      <div className="p-2 mx-auto  ">
-        <div className="grid grid-cols-3 items-center">
+      <div className="px-2 py-6 mx-auto  ">
+        <div className="grid grid-cols-3 items-center space-x-2">
           {Array(3)
             .fill()
             .map((_, index) => (
@@ -94,9 +94,9 @@ const PrintVoucher = ({
                       newVoucherCode={newVoucherCode}
                       voucherType={
                         index === 0
-                          ? "School Copy"
-                          : index === 1
                           ? "Bank Copy"
+                          : index === 1
+                          ? "School Copy"
                           : "Student Copy"
                       }
                       annualFund={annualFund}

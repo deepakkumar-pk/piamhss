@@ -122,7 +122,8 @@ const Design = ({
   const formattedMonth = month < 10 ? `0${month}` : month;
 
   const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
-    const expiryDate = `${'15'}/${formattedMonth}/${year}`;
+    const expiryDate = `${'25'}/${formattedMonth}/${year}`;
+    const dueDate = `${"15"}/${formattedMonth}/${year}`;
 
 
   const getOtherFees = () => {
@@ -141,7 +142,7 @@ const Design = ({
     return otherFees;
   };
 
-  const getTotalAmount = () => {
+  const getTotalAmountBeforeDue = () => {
     const monthlyAmount = parseFloat(amount) || 0;
     const lateAmount = parseFloat(lateFees) || 0;
     const admissionAmount = parseFloat(admissionFees) || 0;
@@ -151,9 +152,10 @@ const Design = ({
     const idAmount = parseFloat(IDFee) || 0;
     const maintainanceAmount = parseFloat(MaintenanceFee) || 0;
     const remainingFees = parseFloat(remainingAmount) || 0;
+    const bankCharges = parseFloat(100)
 
     const totalAmount = (
-      monthlyAmount +
+      monthlyAmount + bankCharges +
       (lateFees > 0 ? lateAmount : 0) +
       (remainingAmount > 0 ? remainingFees : 0) +
       (admissionFees > 0 ? admissionAmount : 0) +
@@ -166,7 +168,17 @@ const Design = ({
     return totalAmount;
   };
 
-  const amountInWords = convertAmountToWords(getTotalAmount());
+    const getTotalAmountAfterDue = () => {
+      const totalAmountBeforeDue = parseInt(getTotalAmountBeforeDue())
+      const lateAmount = parseInt(200)
+
+      const totalAmount = (
+        totalAmountBeforeDue + lateAmount
+      ).toFixed(2);
+      return totalAmount;
+    };
+
+  const amountInWords = convertAmountToWords(getTotalAmountBeforeDue());
 
 
 
@@ -199,27 +211,37 @@ const Design = ({
 
         {/* Fourth row */}
         <div
-          className="col-span-2 md:col-span-2 grid grid-cols-4 border-solid border-t-2 "
+          className="col-span-2 md:col-span-2 grid grid-cols-6 border-solid border-t-2 "
           style={{ gridColumn: "span 4 / span 2" }}
         >
-          <div className="col-span-1">
+          <div className="col-span-1 ">
             <div className="flex items-center justify-center border-solid border-r-2">
-              <h4 className="text-sm font-medium">Date</h4>
+              <h4 className="text-xs font-medium text-center">Iss. Date</h4>
             </div>
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center border-solid border-r-2">
-              <h4 className="text-sm font-medium">{formattedDate}</h4>
+              <h4 className="text-xxs font-medium">{formattedDate}</h4>
             </div>
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center border-solid border-r-2">
-              <h4 className="text-sm font-medium">Validity</h4>
+              <h4 className="text-xs font-medium">Due Date</h4>
+            </div>
+          </div>
+          <div className="col-span-1">
+            <div className="flex items-center justify-center border-solid border-r-2">
+              <h4 className="text-xxs font-medium">{dueDate}</h4>
+            </div>
+          </div>
+          <div className="col-span-1">
+            <div className="flex items-center justify-center border-solid border-r-2">
+              <h4 className="text-xs font-medium">Expiry</h4>
             </div>
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center ">
-              <h4 className="text-sm font-medium">{expiryDate}</h4>
+              <h4 className="text-xxs font-medium">{expiryDate}</h4>
             </div>
           </div>
         </div>
@@ -236,7 +258,7 @@ const Design = ({
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center">
-              <h4 className="text-sm font-medium">{voucherCode}</h4>
+              <h4 className="text-sm font-semibold">{voucherCode}</h4>
             </div>
           </div>
         </div>
@@ -252,7 +274,7 @@ const Design = ({
             </div>
           </div>
           <div className="col-span-1">
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center border-solid border-r-2">
               <h4 className="text-sm font-medium">{voucherType}</h4>
             </div>
           </div>
@@ -262,7 +284,7 @@ const Design = ({
             </div>
           </div>
           <div className="col-span-1">
-            <div className="flex items-center justify-center border-solid border-r-2">
+            <div className="flex items-center justify-center border-solid">
               <h4 className="text-sm font-medium">
                 {admissionFees > 0 ? "Admission" : "Monthly"}
               </h4>
@@ -277,7 +299,8 @@ const Design = ({
         >
           <div className="flex items-center justify-center">
             <div className="text-sm font-medium">
-              {"School's Account No: 304493724"}
+              <span>{"School's Account No: "}</span>
+              <span className="font-semibold">304493724</span>
 
               <div className="text-center text-xs font-normal">
                 Pay at any UBL Branch of Pakistan.
@@ -298,7 +321,7 @@ const Design = ({
           </div>
           <div className="col-span-1">
             <div className="flex items-center justify-center">
-              <h4 className="text-sm font-medium">{grNo}</h4>
+              <h4 className="text-sm font-semibold">{grNo}</h4>
             </div>
           </div>
         </div>
@@ -478,6 +501,20 @@ const Design = ({
                   </td>
                 </tr>
               )}
+              <tr>
+                <td
+                  className="inline-flex items-center justify-center text-center text-xs pl-2"
+                  style={{ width: "75%" }}
+                >
+                  {"Bank Charges"}
+                </td>
+                <td
+                  className="inline-flex items-center justify-center text-xs"
+                  style={{ width: "25%" }}
+                >
+                  Rs {"100"}=/
+                </td>
+              </tr>
             </tbody>
             <tfoot className="">
               <tr className="bg-gray-100 font-bold text-xs border-solid border-t-2 border-b-2">
@@ -486,17 +523,21 @@ const Design = ({
                   style={{ width: "75%" }}
                 >
                   Total Amount
+                  <span className="px-1 text-xxs font-semibold">
+                    (before Due Date)
+                  </span>
                 </td>
                 <td
                   className="inline-flex items-center justify-center "
                   style={{ width: "25%" }}
                 >
-                  Rs {getTotalAmount()}=/
+                  Rs {getTotalAmountBeforeDue()}=/
                 </td>
               </tr>
             </tfoot>
           </table>
         </div>
+
         {/* Tenth row */}
         <div
           className="col-span-2 md:col-span-2 grid grid-cols-1 py-1"
@@ -508,6 +549,30 @@ const Design = ({
             </h4>
           </div>
         </div>
+
+        <div
+          className="col-span-2 md:col-span-2 grid grid-cols-1 border-solid border-t-2 "
+          style={{ gridColumn: "span 4 / span 2" }}
+        >
+          <div className="bg-gray-100 font-bold text-xs border-solid border-t-2 border-b-2">
+            <h1
+              className="inline-flex items-center justify-center "
+              style={{ width: "75%" }}
+            >
+              Total Amount
+              <span className="px-1 text-xxs font-semibold">
+                (after Due Date)
+              </span>
+            </h1>
+            <h1
+              className="inline-flex items-center justify-center "
+              style={{ width: "25%" }}
+            >
+              Rs {getTotalAmountAfterDue()}=/
+            </h1>
+          </div>
+        </div>
+
         {/* Eleventh row */}
         <div
           className="col-span-2 md:col-span-2 grid grid-cols-2 border-solid border-t-2 border-b-2 "

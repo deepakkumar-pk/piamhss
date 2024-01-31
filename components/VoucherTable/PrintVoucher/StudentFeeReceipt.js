@@ -67,8 +67,8 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
 
   return (
     <div className="voucher-container" style={{ pageBreakAfter: "always" }}>
-      <div className="p-2 mx-auto  ">
-        <div className="grid grid-cols-3 items-center">
+      <div className="px-2 py-6 mx-auto  ">
+        <div className="grid grid-cols-3 space-x-2 items-center">
           {Array(3)
             .fill()
             .map((_, index) => (
@@ -93,9 +93,9 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
                       newVoucherCode={voucherCode}
                       voucherType={
                         index === 0
-                          ? "School Copy"
-                          : index === 1
                           ? "Bank Copy"
+                          : index === 1
+                          ? "School Copy"
                           : "Student Copy"
                       }
                       annualFund={annualFund}

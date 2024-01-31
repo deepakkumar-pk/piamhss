@@ -57,20 +57,6 @@ const VoucherRow = (props) => {
 
   const mutation = useMutation((newData) => updateStudent(_id, newData));
 
-  const handlePreview = function (target) {
-    return new Promise(() => {
-      console.log("forwarding print preview request...");
-
-      const data = target.contentWindow.document.documentElement.outerHTML;
-      //console.log(data);
-      const blob = new Blob([data], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      window.electronAPI.previewComponent(url, (response) => {
-        console.log("Main: ", response);
-      });
-      //console.log('Main: ', data);
-    });
-  };
 
 
   const handleGenerateVoucher = useReactToPrint({
@@ -143,10 +129,8 @@ const VoucherRow = (props) => {
           const json = await response.json();
 
           // Check the updated student data, if needed
-          console.log(json);
 
           // Print the generated voucher code
-          console.log(voucherCode);
           updatedVouchers.push(voucherCode);
         } catch (error) {
           console.error("Error updating student:", error);

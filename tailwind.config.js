@@ -13,7 +13,8 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontSize: {
-        xs: ".70rem",
+        xxs: ".62rem",
+        xs: ".68rem",
         sm: ".80rem",
         tiny: ".875rem",
         base: "1rem",

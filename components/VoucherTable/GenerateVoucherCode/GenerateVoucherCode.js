@@ -1,6 +1,5 @@
 const checkVoucherCodeUniqueness = (voucherCode, students) =>
 {
-  console.log( students.length )
   if (students.length > 0) {
     for (let student of students) {
       const hasVoucherCode =

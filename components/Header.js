@@ -18,6 +18,8 @@ import { useQueryClient } from "react-query";
 import Form from "../components/Forms/Form";
 import { deleteStudent, getStudents } from "../lib/helper";
 import { signOut } from "next-auth/react";
+import { FaPowerOff } from "react-icons/fa";
+
 
 const Header = () => {
   const visible = useSelector((state) => state.app.client.toggleForm);
@@ -143,28 +145,39 @@ const Header = () => {
           </div>
 
           <div className="text-center">
-            <div className="flex items-center justify-center w-full ">
+            <div className="flex items-center justify-center space-x-3  w-full ">
               <label
                 htmlFor="toggleAnnualFund"
                 className="flex items-center cursor-pointer"
               >
-                <div className="relative">
-                  <input
-                    id="toggleAnnualFund"
-                    type="checkbox"
-                    className="sr-only"
-                    checked={annualToggle}
-                    onChange={handleAnnualFund}
-                  />
-                  <div className="w-10 h-4 bg-green-900 rounded-full shadow-inner"></div>
-                  <div class="dot absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition"></div>
-                </div>
-                <div className="ml-3 text-green-800 font-medium">
-                  Annual Fund
+                <div className="flex items-center justify-center ">
+                  <div className="relative">
+                    <input
+                      id="toggleAnnualFund"
+                      type="checkbox"
+                      className="sr-only"
+                      checked={annualToggle}
+                      onChange={handleAnnualFund}
+                    />
+                    <div className="w-10 h-4 bg-green-900 rounded-full shadow-inner"></div>
+                    <div className="dot absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition"></div>
+                  </div>
+                  <div className="ml-1 text-green-800 font-medium">
+                    Annual Fund
+                  </div>
                 </div>
               </label>
+              <div
+                className="flex items-center justify-center text-green-800 px-4 cursor-pointer"
+                onClick={() => signOut()}
+              >
+                <span className="mr-1 relative w-6 h-6 bg-white rounded-full shadow-2xl">
+                  <FaPowerOff className="text-xl absolute  " />
+                </span>
+
+                <button className="font-medium">Logout</button>
+              </div>
             </div>
-            <button onClick={()=>signOut()}>Logout</button>
           </div>
         </div>
         <div className="flex items-center justify-center">

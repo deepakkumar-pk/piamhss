@@ -9,7 +9,6 @@ const PrintVoucher = ({
   lateFees,
   StationaryFee,
   feesPaidMonths,
-  CNIC,
   IDFee,
   MaintenanceFee,
   admissionFees,
@@ -87,7 +86,6 @@ const PrintVoucher = ({
                       MaintenanceFee={MaintenanceFee}
                       admissionFees={admissionFees}
                       grNo={grNo}
-                      CNIC={CNIC}
                       remainingAmount={getRemainingAmount()}
                       unpaidMonths={getUnpaidMonths()}
                       fees={fees}

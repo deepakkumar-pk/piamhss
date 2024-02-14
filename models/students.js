@@ -10,7 +10,6 @@ const studentsSchema = new Schema({
   studentClass: String,
   remarks: String,
   status: String,
-  CNIC: String,
   contactNo: String,
   remainingAmount: Number,
   lateFees: Number,

@@ -8,7 +8,6 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
     studentClass,
     SecurityFee,
     feesPaidMonths,
-    CNIC,
     lateFees,
     StationaryFee,
     IDFee,
@@ -86,7 +85,6 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
                       IDFee={IDFee}
                       MaintenanceFee={MaintenanceFee}
                       grNo={grNo}
-                      CNIC={CNIC}
                       remainingAmount={getRemainingAmount()}
                       unpaidMonths={getUnpaidMonths()}
                       fees={fees}

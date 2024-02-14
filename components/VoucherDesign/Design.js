@@ -98,7 +98,6 @@ const Design = ({
   lateFees,
   StationaryFee,
   IDFee,
-  CNIC,
   unpaidMonths,
   remainingAmount,
   MaintenanceFee,

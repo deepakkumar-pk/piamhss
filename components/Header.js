@@ -271,6 +271,7 @@ const Header = () => {
                 </option>
               )}
               <option value="">Select Class</option>
+              <option value="Nursery">Nursery</option>
               <option value="Prep-1">Class Prep-1</option>
               <option value="Prep-2">Class Prep-2</option>
               <option value="1">Class 1</option>

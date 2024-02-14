@@ -29,7 +29,6 @@ const VoucherRow = (props) => {
     StationaryFee,
     IDFee,
     MaintenanceFee,
-    CNIC,
     feesPaidMonths,
     grNo,
     fees,
@@ -245,7 +244,6 @@ const VoucherRow = (props) => {
             MaintenanceFee={MaintenanceFee}
             grNo={grNo}
             fees={fees}
-            CNIC={CNIC}
             feesPaidMonths={feesPaidMonths}
             newVoucherCode={newVoucherCode}
             annualFund={annualToggle}

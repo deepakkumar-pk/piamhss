@@ -20,7 +20,6 @@ export default function AddUserForm({ formData, setFormData }) {
     AdmissionDate,
     grNo,
     fees,
-    CNIC,
     SecurityFee,
     StationaryFee,
     IDFee,
@@ -93,7 +92,6 @@ export default function AddUserForm({ formData, setFormData }) {
       feesPaidMonths: feesPaidMonths ?? [],
       MaintenanceFee,
       admissionFees,
-      CNIC,
       contactNo,
       remarks,
       status: status ?? "Active",
@@ -163,6 +161,7 @@ export default function AddUserForm({ formData, setFormData }) {
             placeholder="Class"
           >
             <option value="">Select Class</option>
+            <option value="Nursery">Nursery</option>
             <option value="Prep-1">Class Prep-1</option>
             <option value="Prep-2">Class Prep-2</option>
             <option value="1">Class 1</option>
@@ -230,15 +229,6 @@ export default function AddUserForm({ formData, setFormData }) {
             onChange={setFormData}
             className="border w-1/4 ml-1 px-5 py-3 focus:outline-none rounded-md"
             placeholder="Maintenance"
-          />
-        </div>
-        <div className="input-type">
-          <input
-            type="text"
-            name="CNIC"
-            onChange={setFormData}
-            className="border w-full px-5 py-3 focus:outline-none rounded-md"
-            placeholder="Father's CNIC"
           />
         </div>
         <div className="input-type">
@@ -363,7 +353,6 @@ export default function AddUserForm({ formData, setFormData }) {
             admissionFees={admissionFees}
             feesPaidMonths={feesPaidMonths}
             grNo={grNo}
-            CNIC={CNIC}
             fees={fees}
             newVoucherCode={newVoucherCode}
           />

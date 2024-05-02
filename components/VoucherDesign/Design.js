@@ -151,7 +151,7 @@ const Design = ({
     const idAmount = parseFloat(IDFee) || 0;
     const maintainanceAmount = parseFloat(MaintenanceFee) || 0;
     const remainingFees = parseFloat(remainingAmount) || 0;
-    const bankCharges = parseFloat(100)
+    const bankCharges = parseFloat(50)
 
     const totalAmount = (
       monthlyAmount + bankCharges +

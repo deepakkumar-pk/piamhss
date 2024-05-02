@@ -511,7 +511,7 @@ const Design = ({
                   className="inline-flex items-center justify-center text-xs"
                   style={{ width: "25%" }}
                 >
-                  Rs {"100"}=/
+                  Rs {"50"}=/
                 </td>
               </tr>
             </tbody>

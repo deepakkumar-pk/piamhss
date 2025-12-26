@@ -122,7 +122,7 @@ const Design = ({
 
   const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
     const expiryDate = `${'25'}/${formattedMonth}/${year}`;
-    const dueDate = `${"10"}/${formattedMonth}/${year}`;
+    const dueDate = `${"15"}/${formattedMonth}/${year}`;
 
 
   const getOtherFees = () => {
@@ -145,7 +145,6 @@ const Design = ({
     const monthlyAmount = parseFloat(amount) || 0;
     const lateAmount = parseFloat(lateFees) || 0;
     const admissionAmount = parseFloat(admissionFees) || 0;
-    const annualAmount = parseFloat(amount) || 0;
     const securityAmount = parseFloat(SecurityFee) || 0;
     const stationaryAmount = parseFloat(StationaryFee) || 0;
     const idAmount = parseFloat(IDFee) || 0;
@@ -158,10 +157,10 @@ const Design = ({
       (lateFees > 0 ? lateAmount : 0) +
       (remainingAmount > 0 ? remainingFees : 0) +
       (admissionFees > 0 ? admissionAmount : 0) +
-      (admissionFees > 0 || annualFund ? annualAmount : 0) +
-      (admissionFees > 0 || annualFund
-        ? securityAmount + stationaryAmount + maintainanceAmount + idAmount
-        : 0)
+      ((admissionFees > 0 || annualFund) && securityAmount > 0 ? securityAmount : 0) +
+      ((admissionFees > 0 || annualFund) && stationaryAmount > 0 ? stationaryAmount : 0) +
+      ((admissionFees > 0 || annualFund) && maintainanceAmount > 0 ? maintainanceAmount : 0) +
+      ((admissionFees > 0 || annualFund) && idAmount > 0 ? idAmount : 0)
     ).toFixed(2);
 
     return totalAmount;
@@ -421,22 +420,6 @@ const Design = ({
                   </td>
                 </tr>
               )}
-              {(admissionFees > 0 || annualFund) && (
-                <tr>
-                  <td
-                    className="inline-flex items-center justify-center text-xs"
-                    style={{ width: "75%" }}
-                  >
-                    Annual Fund
-                  </td>
-                  <td
-                    className="inline-flex items-center justify-center text-xs"
-                    style={{ width: "25%" }}
-                  >
-                    Rs {amount}=/
-                  </td>
-                </tr>
-              )}
               <tr>
                 <td
                   className="inline-flex items-center justify-center text-xs"
@@ -468,19 +451,67 @@ const Design = ({
                   </td>
                 </tr>
               )}
-              {(admissionFees > 0 || annualFund) && (
+              {(admissionFees > 0 || annualFund) && MaintenanceFee > 0 && (
                 <tr>
                   <td
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "75%" }}
                   >
-                    Other (Security/Stationary/ID Card/Maintenance)
+                    Maintenance Fees
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "25%" }}
                   >
-                    Rs {getOtherFees()}=/
+                    Rs {MaintenanceFee}=/
+                  </td>
+                </tr>
+              )}
+              {(admissionFees > 0 || annualFund) && SecurityFee > 0 && (
+                <tr>
+                  <td
+                    className="inline-flex items-center justify-center text-xs"
+                    style={{ width: "75%" }}
+                  >
+                    Security Fees
+                  </td>
+                  <td
+                    className="inline-flex items-center justify-center text-xs"
+                    style={{ width: "25%" }}
+                  >
+                    Rs {SecurityFee}=/
+                  </td>
+                </tr>
+              )}
+              {(admissionFees > 0 || annualFund) && StationaryFee > 0 && (
+                <tr>
+                  <td
+                    className="inline-flex items-center justify-center text-xs"
+                    style={{ width: "75%" }}
+                  >
+                    Stationary Fees
+                  </td>
+                  <td
+                    className="inline-flex items-center justify-center text-xs"
+                    style={{ width: "25%" }}
+                  >
+                    Rs {StationaryFee}=/
+                  </td>
+                </tr>
+              )}
+              {(admissionFees > 0 || annualFund) && IDFee > 0 && (
+                <tr>
+                  <td
+                    className="inline-flex items-center justify-center text-xs"
+                    style={{ width: "75%" }}
+                  >
+                    ID Card Fees
+                  </td>
+                  <td
+                    className="inline-flex items-center justify-center text-xs"
+                    style={{ width: "25%" }}
+                  >
+                    Rs {IDFee}=/
                   </td>
                 </tr>
               )}
@@ -604,7 +635,7 @@ const Design = ({
             <h4 className="p-2 text-xs font-medium">
               {`Note: Fees due by ${
                 monthNames[currentDate.getMonth()]
-              } 10,${currentDate.getFullYear()}`}
+              } 15,${currentDate.getFullYear()}`}
               , to avoid Rs 200/= late fee.
             </h4>
           </div>

@@ -457,7 +457,7 @@ const Design = ({
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "75%" }}
                   >
-                    Maintenance Fees
+                    Maintenance Fees (Yearly)
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"
@@ -473,7 +473,7 @@ const Design = ({
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "75%" }}
                   >
-                    Security Fees
+                    Security Fees (Yearly)
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"
@@ -489,7 +489,7 @@ const Design = ({
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "75%" }}
                   >
-                    Stationary Fees
+                    Stationary Fees (Yearly)
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"
@@ -505,7 +505,7 @@ const Design = ({
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "75%" }}
                   >
-                    ID Card Fees
+                    ID Card Fees (Yearly)
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"

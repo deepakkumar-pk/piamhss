@@ -47,9 +47,10 @@ const VoucherRow = (props) => {
     setIsHovering(false);
   };
 
-  const { data: students, refetch } = useQuery("students", getStudents);
+  const { data, refetch } = useQuery("students", () => getStudents({}));
+  const students = data?.students || [];
 
-  const GenerateUniqueVoucherCode = generateUniqueVoucherCode(students);
+  const GenerateUniqueVoucherCode = students.length > 0 ? generateUniqueVoucherCode(students) : null;
 
   const mutation = useMutation((newData) => updateStudent(_id, newData));
 
@@ -65,8 +66,8 @@ const VoucherRow = (props) => {
       setNewVoucherCode(voucherCode);
 
       if (voucherCode) {
-        const existingVoucherCode =
-          students.find((student) => student._id === _id)?.voucherCode || [];
+        const currentStudent = students?.find((student) => student._id === _id);
+        const existingVoucherCode = currentStudent?.voucherCode || [];
         const updatedVoucherCode = [
           ...existingVoucherCode,
           { [monthName]: voucherCode },

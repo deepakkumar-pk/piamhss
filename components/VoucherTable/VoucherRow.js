@@ -6,16 +6,13 @@ import PropTypes from "prop-types";
 import { useReactToPrint } from "react-to-print";
 import { useQuery, useMutation } from "react-query";
 import { useSelector, useDispatch } from "react-redux";
-import { printAll, annualFund } from "../../redux/reducer";
+import { annualFund } from "../../redux/reducer";
 import { getStudents, updateStudent } from "../../lib/helper";
-import StudentFeeReceipt from "../VoucherTable/PrintVoucher/StudentFeeReceipt";
 import PrintVoucher from "../VoucherTable/PrintVoucher/PrintVoucher";
 import { generateUniqueVoucherCode } from "./GenerateVoucherCode/GenerateVoucherCode";
 
 const VoucherRow = (props) => {
-  const handlePrintAll = useSelector((state) => state.app.client.printAll);
   const annualToggle = useSelector((state) => state.app.client.annualFund);
-  const [allVouchers, setAllVouchers] = useState([]);
   const [newVoucherCode, setNewVoucherCode] = useState("");
 
   const {
@@ -56,8 +53,6 @@ const VoucherRow = (props) => {
 
   const mutation = useMutation((newData) => updateStudent(_id, newData));
 
-
-
   const handleGenerateVoucher = useReactToPrint({
     content: () => voucherContentRef.current,
 
@@ -87,71 +82,6 @@ const VoucherRow = (props) => {
     },
   });
 
-  const handlePrintAllVouchers = useReactToPrint({
-    content: () => allStudentsRef.current,
-    onBeforeGetContent: async () => {
-      const currentDate = new Date();
-      const monthName = new Intl.DateTimeFormat("en-US", {
-        month: "long",
-      }).format(currentDate);
-
-      let updatedVouchers = []; // Temporary variable for updated vouchers
-
-      for await (const student of students) {
-        const voucherCode = await generateUniqueVoucherCode(students);
-        await setAllVouchers((prevVouchers) => [...prevVouchers, voucherCode]);
-
-        // Update voucher code for the current student using their ID
-        const studentId = student._id;
-        const existingVoucherCode = student.voucherCode || [];
-        const updatedVoucherCode = [
-          ...existingVoucherCode,
-          { [monthName]: voucherCode },
-        ];
-
-        const BASE_URL = "http://localhost:3000/";
-
-        // Prepare the formData with the updated voucher code
-        const formData = { voucherCode: updatedVoucherCode };
-
-        try {
-          const Options = {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-          };
-
-          const response = await fetch(
-            `${BASE_URL}api/students/${studentId}`,
-            Options
-          );
-          const json = await response.json();
-
-          // Check the updated student data, if needed
-
-          // Print the generated voucher code
-          updatedVouchers.push(voucherCode);
-        } catch (error) {
-          console.error("Error updating student:", error);
-        }
-      }
-      refetch();
-
-      allStudentsRef.current.style.display = "block";
-    },
-    onAfterPrint: () => {
-      setAllVouchers([]);
-      allStudentsRef.current.style.display = "none";
-    },
-  });
-
-  // Reference to the container holding all students' fee receipts
-  const allStudentsRef = useRef();
-
-  if (handlePrintAll) {
-    handlePrintAllVouchers();
-    dispatch(printAll(false));
-  }
   return (
     <tr className="bg-gray-50 text-center">
       <td className="whitespace-nowrap pl-6 pr-16 py-2 flex flex-row items-center">
@@ -248,23 +178,6 @@ const VoucherRow = (props) => {
             newVoucherCode={newVoucherCode}
             annualFund={annualToggle}
           />
-        </div>
-
-        
-        <div>
-          <div style={{ display: "none" }}>
-            <div ref={allStudentsRef}>
-              {students.map((student, index) => (
-                <StudentFeeReceipt
-                  key={index}
-                  student={student}
-                  students={students}
-                  voucherCode={allVouchers[index]}
-                  annualFund={annualToggle}
-                />
-              ))}
-            </div>
-          </div>
         </div>
       </td>
     </tr>

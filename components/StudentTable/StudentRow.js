@@ -31,7 +31,8 @@ const StudentRow = (props) => {
   const handleMonthlySummary = useSelector(
     (state) => state.app.client.monthlySummary
   );
-  const { data: students } = useQuery("students", getStudents);
+  const { data } = useQuery("students", () => getStudents({}));
+  const students = data?.students || data || [];
 
   const currentDate = new Date();
   const monthName = new Intl.DateTimeFormat("en-US", {
@@ -83,7 +84,7 @@ const StudentRow = (props) => {
   }
 
   return (
-    <tr class="bg-gray-50 text-center">
+    <tr className="bg-gray-50 text-center">
       <td className="whitespace-nowrap pl-6 pr-16 py-2 flex flex-row items-center">
         <Image
           src={pic}

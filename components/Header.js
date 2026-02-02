@@ -6,7 +6,6 @@ import {
   deleteAction,
   voucherShow,
   studentClassFilter,
-  printAll,
   monthlySummary,
   searchValue,
   annualFund,
@@ -96,10 +95,7 @@ const Header = () => {
     dispatch(studentClassFilter(""));
     dispatch(searchValue(""));
   };
-  const handlerPrintAll = async () => {
-    await dispatch(voucherShow(true));
-    dispatch(printAll(true));
-  };
+
 
   const handleSummary = async () => {
     dispatch(voucherShow(false));
@@ -231,15 +227,7 @@ const Header = () => {
               </span>
               Voucher
             </button>
-            <button
-              className="flex bg-green-800 text-white px-4 py-2 border rounded-md hover:bg-green-700 transition duration-300"
-              onClick={handlerPrintAll}
-            >
-              <span className="mr-2">
-                <BiReceipt size={23} />
-              </span>
-              Print All
-            </button>
+           
             <button
               className="flex bg-green-800 text-white px-4 py-2 border rounded-md hover:bg-green-700 transition duration-300"
               onClick={handleSummary}

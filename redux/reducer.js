@@ -26,9 +26,7 @@ export const ReducerSlice = createSlice({
     studentClassFilter: (state, action) => {
       state.client.studentClassFilter = action.payload;
     },
-    printAll: (state, action) => {
-      state.client.printAll = action.payload;
-    },
+ 
     monthlySummary: (state, action) => {
       state.client.monthlySummary = action.payload;
     },
@@ -48,7 +46,6 @@ export const {
   updateAction,
   searchValue,
   studentClassFilter,
-  printAll,
   deleteAction,
   annualFund,
   monthlySummary,

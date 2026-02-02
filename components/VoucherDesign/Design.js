@@ -121,8 +121,8 @@ const Design = ({
   const formattedMonth = month < 10 ? `0${month}` : month;
 
   const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
-    const expiryDate = `${'25'}/${formattedMonth}/${year}`;
-    const dueDate = `${"13"}/${formattedMonth}/${year}`;
+  const expiryDate = `${'25'}/${formattedMonth}/${year}`;
+  const dueDate = `${"13"}/${formattedMonth}/${year}`;
 
 
   const getOtherFees = () => {
@@ -166,15 +166,15 @@ const Design = ({
     return totalAmount;
   };
 
-    const getTotalAmountAfterDue = () => {
-      const totalAmountBeforeDue = parseInt(getTotalAmountBeforeDue())
-      const lateAmount = parseInt(200)
+  const getTotalAmountAfterDue = () => {
+    const totalAmountBeforeDue = parseInt(getTotalAmountBeforeDue())
+    const lateAmount = parseInt(200)
 
-      const totalAmount = (
-        totalAmountBeforeDue + lateAmount
-      ).toFixed(2);
-      return totalAmount;
-    };
+    const totalAmount = (
+      totalAmountBeforeDue + lateAmount
+    ).toFixed(2);
+    return totalAmount;
+  };
 
   const amountInWords = convertAmountToWords(getTotalAmountBeforeDue());
 
@@ -193,6 +193,8 @@ const Design = ({
                 width={55}
                 height={55}
                 alt="School Logo"
+                priority={true} 
+                unoptimized={true} 
               />
             </div>
             <h1 className="text-xl font-bold text-green-900">
@@ -203,8 +205,14 @@ const Design = ({
         <div className="col-span-2 md:col-span-1 md:col-start-2 lg:col-span-2 lg:col-start-3 flex items-center justify-center px-1 py-1">
           {/* Second column (30%) */}
           <div className=" ">
-            <Image src={bankLogo} width={75} height={75} alt="Bank Logo" />
-          </div>
+            <Image
+              src={bankLogo}
+              width={75}
+              height={75}
+              alt="Bank Logo"
+              priority={true} 
+              unoptimized={true} 
+            />          </div>
         </div>
 
         {/* Fourth row */}
@@ -633,9 +641,8 @@ const Design = ({
         >
           <div className="flex items-center justify-center">
             <h4 className="p-2 text-xs font-medium">
-              {`Note: Fees due by ${
-                monthNames[currentDate.getMonth()]
-              } 13,${currentDate.getFullYear()}`}
+              {`Note: Fees due by ${monthNames[currentDate.getMonth()]
+                } 13,${currentDate.getFullYear()}`}
               , to avoid Rs 200/= late fee.
             </h4>
           </div>

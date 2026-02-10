@@ -3,23 +3,26 @@ import { BiBrush } from "react-icons/bi";
 import Success from "../Alerts/Success";
 import Bug from "../Alerts/Bug";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { addStudent, getStudent, getStudents, updateStudent } from "../../lib/helper";
+import { getStudent, getStudents, updateStudent } from "../../lib/helper";
 import { toggleChangeAction } from "../../redux/reducer";
 import { MdOutlineWatchLater, MdDeleteOutline } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function UpdateUserForm({ formId, formData, setFormData }) {
   const dispatch = useDispatch();
-
   const queryClient = useQueryClient();
+  
+  const currentPage = useSelector((state) => state.app.client.currentPage);
+  const studentsPerPage = useSelector((state) => state.app.client.studentsPerPage);
+
   const { isLoading, isError, data, error } = useQuery(
-    ["students", formId],
+    ["student", formId],
     () => getStudent(formId)
   );
-  // Set default value for feesPaidMonths based on fetched data
 
   const [feesPaidMonths, setFeesPaidMonths] = useState([]);
   const [lateFees, setlateFees] = useState(0);
+  
   useEffect(() => {
     if (data) {
       setFeesPaidMonths(data.feesPaidMonths || []);
@@ -41,10 +44,9 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
     "February",
     "March",
   ];
-  // const currentMonthIndex = 0;
+
   const currentMonthIndex = new Date().getMonth();
 
-  // Function to handle wrap-around and map month index to the year's months
   const mapToYearMonth = (monthIndex) => (monthIndex + 9) % 12;
 
   const currentYearMonth = mapToYearMonth(currentMonthIndex);
@@ -52,40 +54,40 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
   let targetMonth;
 
   switch (currentYearMonth) {
-    case 0: // April
+    case 0:
       targetMonth = 3;
       break;
-    case 1: // May
+    case 1:
       targetMonth = 4;
       break;
-    case 2: // June
+    case 2:
       targetMonth = 5;
       break;
-    case 3: // July
+    case 3:
       targetMonth = 6;
       break;
-    case 4: // August
+    case 4:
       targetMonth = 7;
       break;
-    case 5: // September
+    case 5:
       targetMonth = 8;
       break;
-    case 6: // October
+    case 6:
       targetMonth = 9;
       break;
-    case 7: // November
+    case 7:
       targetMonth = 10;
       break;
-    case 8: // December
+    case 8:
       targetMonth = 11;
       break;
-    case 9: // January
+    case 9:
       targetMonth = 12;
       break;
-    case 10: // February
+    case 10:
       targetMonth = 13;
       break;
-    case 11: // March
+    case 11:
       targetMonth = 14;
       break;
     default:
@@ -98,9 +100,10 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
     (newData) => updateStudent(formId, newData),
     {
       onSuccess: async (data) => {
-        queryClient.prefetchQuery("students", getStudents);
+        // ✅ FIXED: Invalidate ALL students queries (including paginated)
+        await queryClient.invalidateQueries({ queryKey: ["students"] });
         setTimeout(() => {
-          dispatch(toggleChangeAction()); // Toggle off the form after 3 seconds
+          dispatch(toggleChangeAction());
         }, 1500);
       },
     }
@@ -127,31 +130,24 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
     status,
   } = data;
 
-  // Calculate the remaining amount based on fees and months paid
   let lateFeesAmount = parseFloat(lateFees);
-  const currentFees = parseFloat(fees); // Assuming fees is a number
+  const currentFees = parseFloat(fees);
   const monthsChecked = feesPaidMonths.length;
   const totalMonths = currentYearMonth + 1;
   const remainingAmount = (
     currentFees * (totalMonths - monthsChecked) +
     lateFeesAmount
   ).toFixed(2);
+
   const handleAddLateFees = () => {
     let lateFeesAmount = parseFloat(lateFees || 0) + 200;
     setlateFees(lateFeesAmount);
   };
 
   const handleClearAllDues = () => {
-    // Get the total months (including the current month)
     const totalMonths = currentYearMonth + 1;
-
-    // Filter the months to include only those that are not upcoming (before or equal to the current month)
     const clearedMonths = months.slice(0, totalMonths);
-
-    // Set the feesPaidMonths state to the clearedMonths array
     setFeesPaidMonths(clearedMonths);
-
-    // Reset the lateFees state to 0
     setlateFees(0);
   };
 
@@ -159,9 +155,9 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
     e.preventDefault();
     const updatedData = {
       ...data,
-      feesPaidMonths: feesPaidMonths, // Save the selected months
-      remainingAmount: remainingAmount, // Update the remaining amount in the form data
-      lateFees: lateFees, // Update the remaining amount in the form data
+      feesPaidMonths: feesPaidMonths,
+      remainingAmount: remainingAmount,
+      lateFees: lateFees,
       ...formData,
     };
     await UpdateMutation.mutate(updatedData);
@@ -311,40 +307,40 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
             let myMonth;
 
             switch (index) {
-              case 0: // April
+              case 0:
                 myMonth = 3;
                 break;
-              case 1: // May
+              case 1:
                 myMonth = 4;
                 break;
-              case 2: // June
+              case 2:
                 myMonth = 5;
                 break;
-              case 3: // July
+              case 3:
                 myMonth = 6;
                 break;
-              case 4: // August
+              case 4:
                 myMonth = 7;
                 break;
-              case 5: // September
+              case 5:
                 myMonth = 8;
                 break;
-              case 6: // October
+              case 6:
                 myMonth = 9;
                 break;
-              case 7: // November
+              case 7:
                 myMonth = 10;
                 break;
-              case 8: // December
+              case 8:
                 myMonth = 11;
                 break;
-              case 9: // January
+              case 9:
                 myMonth = 12;
                 break;
-              case 10: // February
+              case 10:
                 myMonth = 13;
                 break;
-              case 11: // March
+              case 11:
                 myMonth = 14;
                 break;
               default:

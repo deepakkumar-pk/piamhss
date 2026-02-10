@@ -10,15 +10,15 @@ import {
   searchValue,
   annualFund,
   defaulterDataFilter,
+  setCurrentPage,
 } from "../redux/reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { BiUserPlus, BiX, BiCheck, BiReceipt, BiUser } from "react-icons/bi";
 import { useQueryClient } from "react-query";
 import Form from "../components/Forms/Form";
-import { deleteStudent, getStudents } from "../lib/helper";
+import { deleteStudent } from "../lib/helper";
 import { signOut } from "next-auth/react";
 import { FaPowerOff } from "react-icons/fa";
-
 
 const Header = () => {
   const visible = useSelector((state) => state.app.client.toggleForm);
@@ -87,6 +87,7 @@ const Header = () => {
     dispatch(voucherShow(false));
     dispatch(studentClassFilter(""));
     dispatch(searchValue(""));
+    dispatch(setCurrentPage(1));
   };
 
   const voucherHandler = () => {
@@ -94,8 +95,8 @@ const Header = () => {
     dispatch(defaulterDataFilter(false));
     dispatch(studentClassFilter(""));
     dispatch(searchValue(""));
+    dispatch(setCurrentPage(1));
   };
-
 
   const handleSummary = async () => {
     dispatch(voucherShow(false));
@@ -105,7 +106,8 @@ const Header = () => {
   const deleteHandler = async () => {
     if (deleteId) {
       await deleteStudent(deleteId);
-      await queryClient.prefetchQuery("students", getStudents);
+      // Invalidate ALL students queries (including all paginated versions)
+      await queryClient.invalidateQueries({ queryKey: ["students"] });
       await dispatch(deleteAction(null));
     }
   };
@@ -129,12 +131,12 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-10">
       <div className="bg-green-100 py-2 ">
-        <div class="grid grid-cols-3 gap-4 ">
-          <div class="text-center text-green-900 font-semibold text-base">
+        <div className="grid grid-cols-3 gap-4 ">
+          <div className="text-center text-green-900 font-semibold text-base">
             Date: {formattedDate}
           </div>
           <div
-            class="text-center text-green-900 font-semibold text-base"
+            className="text-center text-green-900 font-semibold text-base"
             suppressHydrationWarning
           >
             Time: {currentTime.toLocaleTimeString()}
@@ -227,7 +229,6 @@ const Header = () => {
               </span>
               Voucher
             </button>
-           
             <button
               className="flex bg-green-800 text-white px-4 py-2 border rounded-md hover:bg-green-700 transition duration-300"
               onClick={handleSummary}

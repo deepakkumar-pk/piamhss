@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { BiEdit, BiTrashAlt } from "react-icons/bi";
 import Image from "next/image";
 import pic from "../../public/images/pic.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { useQuery, useMutation } from "react-query";
+import { useQuery } from "react-query";
 import { useReactToPrint } from "react-to-print";
-import { getStudents, updateStudent } from "../../lib/helper";
+import { getStudents } from "../../lib/helper";
 
 import {
   toggleChangeAction,
@@ -31,16 +31,16 @@ const StudentRow = (props) => {
   const handleMonthlySummary = useSelector(
     (state) => state.app.client.monthlySummary
   );
-  const { data } = useQuery("students", () => getStudents({}));
-  const students = data?.students || data || [];
-
-  const currentDate = new Date();
-  const monthName = new Intl.DateTimeFormat("en-US", {
-    month: "long",
-  }).format(currentDate);
+  const currentPage = useSelector((state) => state.app.client.currentPage);
+  const studentsPerPage = useSelector((state) => state.app.client.studentsPerPage);
+  
+  const { data: students } = useQuery(
+    ["students", currentPage, studentsPerPage],
+    () => getStudents(currentPage, studentsPerPage)
+  );
 
   const dispatch = useDispatch();
-  const [isHovering, setIsHovering] = React.useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseEnter = () => {
     if (remarks) {
@@ -75,7 +75,6 @@ const StudentRow = (props) => {
     },
   });
 
-  // Reference to the container holding all students' fee receipts
   const allStudentsRef = useRef();
 
   if (handleMonthlySummary) {
@@ -161,7 +160,7 @@ const StudentRow = (props) => {
       <td>
         <div style={{ display: "none" }}>
           <div ref={allStudentsRef}>
-            <MonthlySummary students={students} />
+            <MonthlySummary students={students?.students || []} />
           </div>
         </div>
       </td>

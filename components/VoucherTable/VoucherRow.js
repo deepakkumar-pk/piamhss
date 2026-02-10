@@ -1,18 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { RiPrinterLine } from "react-icons/ri";
 import Image from "next/image";
 import pic from "../../public/images/pic.svg";
 import PropTypes from "prop-types";
 import { useReactToPrint } from "react-to-print";
-import { useQuery, useMutation } from "react-query";
-import { useSelector, useDispatch } from "react-redux";
-import { annualFund } from "../../redux/reducer";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useSelector } from "react-redux";
 import { getStudents, updateStudent } from "../../lib/helper";
 import PrintVoucher from "../VoucherTable/PrintVoucher/PrintVoucher";
 import { generateUniqueVoucherCode } from "./GenerateVoucherCode/GenerateVoucherCode";
 
 const VoucherRow = (props) => {
   const annualToggle = useSelector((state) => state.app.client.annualFund);
+  const currentPage = useSelector((state) => state.app.client.currentPage);
+  const studentsPerPage = useSelector((state) => state.app.client.studentsPerPage);
   const [newVoucherCode, setNewVoucherCode] = useState("");
 
   const {
@@ -32,10 +33,10 @@ const VoucherRow = (props) => {
     remarks,
     status,
   } = props;
-  const dispatch = useDispatch();
 
   const [isHovering, setIsHovering] = useState(false);
   const voucherContentRef = useRef();
+  const queryClient = useQueryClient();
 
   const handleMouseEnter = () => {
     if (remarks) {
@@ -47,12 +48,18 @@ const VoucherRow = (props) => {
     setIsHovering(false);
   };
 
-  const { data, refetch } = useQuery("students", () => getStudents({}));
-  const students = data?.students || [];
+  const { data: students } = useQuery(
+    ["students", currentPage, studentsPerPage],
+    () => getStudents(currentPage, studentsPerPage)
+  );
 
-  const GenerateUniqueVoucherCode = students.length > 0 ? generateUniqueVoucherCode(students) : null;
+  const GenerateUniqueVoucherCode = generateUniqueVoucherCode(students?.students || []);
 
-  const mutation = useMutation((newData) => updateStudent(_id, newData));
+  const mutation = useMutation((newData) => updateStudent(_id, newData), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["students"] });
+    },
+  });
 
   const handleGenerateVoucher = useReactToPrint({
     content: () => voucherContentRef.current,
@@ -66,8 +73,8 @@ const VoucherRow = (props) => {
       setNewVoucherCode(voucherCode);
 
       if (voucherCode) {
-        const currentStudent = students?.find((student) => student._id === _id);
-        const existingVoucherCode = currentStudent?.voucherCode || [];
+        const existingVoucherCode =
+          students?.students?.find((student) => student._id === _id)?.voucherCode || [];
         const updatedVoucherCode = [
           ...existingVoucherCode,
           { [monthName]: voucherCode },

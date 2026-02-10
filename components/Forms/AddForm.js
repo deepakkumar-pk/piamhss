@@ -6,7 +6,7 @@ import Bug from "../Alerts/Bug";
 import { useQueryClient, useQuery, useMutation } from "react-query";
 import { addStudent, getStudents } from "../../lib/helper";
 import { toggleChangeAction } from "../../redux/reducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
 import { generateUniqueVoucherCode } from "../VoucherTable/GenerateVoucherCode/GenerateVoucherCode";
 import PrintVoucher from "../VoucherTable/PrintVoucher/PrintVoucher";
@@ -36,17 +36,25 @@ export default function AddUserForm({ formData, setFormData }) {
   const [printButton, setprintButton] = useState(false);
   const [printVoucher, setPrintVoucher] = useState(false);
   const dispatch = useDispatch();
-
   const queryClient = useQueryClient();
+
+  const currentPage = useSelector((state) => state.app.client.currentPage);
+  const studentsPerPage = useSelector((state) => state.app.client.studentsPerPage);
+
   const addMutation = useMutation(addStudent, {
     onSuccess: () => {
-      queryClient.prefetchQuery("students", getStudents);
+      // ✅ FIXED: Invalidate ALL students queries (including paginated)
+      queryClient.invalidateQueries({ queryKey: ["students"] });
       setTimeout(() => {
-        dispatch(toggleChangeAction()); // Toggle off the form after 3 seconds
+        dispatch(toggleChangeAction());
       }, 1500);
     },
   });
-  const { data: students, refetch } = useQuery("students", getStudents);
+
+  const { data: students, refetch } = useQuery(
+    ["students", currentPage, studentsPerPage],
+    () => getStudents(currentPage, studentsPerPage)
+  );
 
   const admissionVoucherRef = useRef();
 
@@ -57,7 +65,7 @@ export default function AddUserForm({ formData, setFormData }) {
 
   const handleGenerateVoucher = async () => {
     setprintButton(true);
-    const voucherCode = await generateUniqueVoucherCode(students);
+    const voucherCode = await generateUniqueVoucherCode(students?.students || []);
     setNewVoucherCode(voucherCode);
     setPrintVoucher(true);
   };

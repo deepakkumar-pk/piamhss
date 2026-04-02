@@ -19,8 +19,7 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
   const currentMonthIndex = new Date().getMonth();
   const currentYear = new Date().getFullYear();
 
-  // FIX: April (JS month 3) was returning 0 instead of 12
-  // (3 + 9) % 12 = 0, but April means all 12 months of the academic year have started
+  
   const mapToYearMonth = (monthIndex) => {
     const result = (monthIndex + 9) % 12;
     return result === 0 ? 12 : result;

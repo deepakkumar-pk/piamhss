@@ -10,7 +10,6 @@ import {
   searchValue,
   annualFund,
   defaulterDataFilter,
-  setCurrentPage,
 } from "../redux/reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { BiUserPlus, BiX, BiCheck, BiReceipt, BiUser } from "react-icons/bi";
@@ -87,7 +86,6 @@ const Header = () => {
     dispatch(voucherShow(false));
     dispatch(studentClassFilter(""));
     dispatch(searchValue(""));
-    dispatch(setCurrentPage(1));
   };
 
   const voucherHandler = () => {
@@ -95,7 +93,6 @@ const Header = () => {
     dispatch(defaulterDataFilter(false));
     dispatch(studentClassFilter(""));
     dispatch(searchValue(""));
-    dispatch(setCurrentPage(1));
   };
 
   const handleSummary = async () => {

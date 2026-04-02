@@ -3,7 +3,7 @@ import { BiBrush } from "react-icons/bi";
 import Success from "../Alerts/Success";
 import Bug from "../Alerts/Bug";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { getStudent, getStudents, updateStudent } from "../../lib/helper";
+import { getStudent, updateStudent } from "../../lib/helper";
 import { toggleChangeAction } from "../../redux/reducer";
 import { MdOutlineWatchLater, MdDeleteOutline } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,9 +11,6 @@ import { useSelector, useDispatch } from "react-redux";
 export default function UpdateUserForm({ formId, formData, setFormData }) {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  
-  const currentPage = useSelector((state) => state.app.client.currentPage);
-  const studentsPerPage = useSelector((state) => state.app.client.studentsPerPage);
 
   const { isLoading, isError, data, error } = useQuery(
     ["student", formId],
@@ -22,7 +19,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
 
   const [feesPaidMonths, setFeesPaidMonths] = useState([]);
   const [lateFees, setlateFees] = useState(0);
-  
+
   useEffect(() => {
     if (data) {
       setFeesPaidMonths(data.feesPaidMonths || []);
@@ -47,60 +44,25 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
 
   const currentMonthIndex = new Date().getMonth();
 
-  const mapToYearMonth = (monthIndex) => (monthIndex + 9) % 12;
+  // FIX: April (JS month 3) was returning 0 instead of 12
+  // (3 + 9) % 12 = 0, but April means all 12 months of the academic year have started
+  const mapToYearMonth = (monthIndex) => {
+    const result = (monthIndex + 9) % 12;
+    return result === 0 ? 12 : result;
+  };
 
   const currentYearMonth = mapToYearMonth(currentMonthIndex);
 
-  let targetMonth;
-
-  switch (currentYearMonth) {
-    case 0:
-      targetMonth = 3;
-      break;
-    case 1:
-      targetMonth = 4;
-      break;
-    case 2:
-      targetMonth = 5;
-      break;
-    case 3:
-      targetMonth = 6;
-      break;
-    case 4:
-      targetMonth = 7;
-      break;
-    case 5:
-      targetMonth = 8;
-      break;
-    case 6:
-      targetMonth = 9;
-      break;
-    case 7:
-      targetMonth = 10;
-      break;
-    case 8:
-      targetMonth = 11;
-      break;
-    case 9:
-      targetMonth = 12;
-      break;
-    case 10:
-      targetMonth = 13;
-      break;
-    case 11:
-      targetMonth = 14;
-      break;
-    default:
-      targetMonth = "Invalid month";
-  }
-
-  const isUpcomingMonth = (monthIndex) => monthIndex > targetMonth;
+  // FIX: isUpcomingMonth now uses academic index (0–11) directly,
+  // compared against currentYearMonth. No more targetMonth/myMonth switch tables needed.
+  // e.g. in April: currentYearMonth=12, so index > 12 is never true → all months enabled ✓
+  // e.g. in May:   currentYearMonth=1,  so index > 1 disables June–March ✓
+  const isUpcomingMonth = (index) => index >= currentYearMonth;
 
   const UpdateMutation = useMutation(
     (newData) => updateStudent(formId, newData),
     {
-      onSuccess: async (data) => {
-        // ✅ FIXED: Invalidate ALL students queries (including paginated)
+      onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["students"] });
         setTimeout(() => {
           dispatch(toggleChangeAction());
@@ -133,20 +95,24 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
   let lateFeesAmount = parseFloat(lateFees);
   const currentFees = parseFloat(fees);
   const monthsChecked = feesPaidMonths.length;
-  const totalMonths = currentYearMonth + 1;
+
+  // FIX: was currentYearMonth + 1, which overcounted by 1 every month
+  // and produced massive negatives in April when currentYearMonth was wrongly 0
+  const totalMonths = currentYearMonth;
+
   const remainingAmount = (
-    currentFees * (totalMonths - monthsChecked) +
+    currentFees * (monthsChecked > totalMonths ? 0 : totalMonths - monthsChecked) +
     lateFeesAmount
   ).toFixed(2);
 
   const handleAddLateFees = () => {
-    let lateFeesAmount = parseFloat(lateFees || 0) + 200;
-    setlateFees(lateFeesAmount);
+    let newLateFees = parseFloat(lateFees || 0) + 200;
+    setlateFees(newLateFees);
   };
 
   const handleClearAllDues = () => {
-    const totalMonths = currentYearMonth + 1;
-    const clearedMonths = months.slice(0, totalMonths);
+    // FIX: was currentYearMonth + 1, now correctly uses currentYearMonth
+    const clearedMonths = months.slice(0, currentYearMonth);
     setFeesPaidMonths(clearedMonths);
     setlateFees(0);
   };
@@ -304,48 +270,6 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
         <div className="input-type mt-2">
           <span className="text-base font-medium px-1">Fees Paid: </span>
           {months.map((month, index) => {
-            let myMonth;
-
-            switch (index) {
-              case 0:
-                myMonth = 3;
-                break;
-              case 1:
-                myMonth = 4;
-                break;
-              case 2:
-                myMonth = 5;
-                break;
-              case 3:
-                myMonth = 6;
-                break;
-              case 4:
-                myMonth = 7;
-                break;
-              case 5:
-                myMonth = 8;
-                break;
-              case 6:
-                myMonth = 9;
-                break;
-              case 7:
-                myMonth = 10;
-                break;
-              case 8:
-                myMonth = 11;
-                break;
-              case 9:
-                myMonth = 12;
-                break;
-              case 10:
-                myMonth = 13;
-                break;
-              case 11:
-                myMonth = 14;
-                break;
-              default:
-                myMonth = "Invalid month";
-            }
             return (
               <div
                 key={month}
@@ -372,7 +296,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
                     }
                   }}
                   checked={feesPaidMonths.includes(month)}
-                  disabled={isUpcomingMonth(myMonth)}
+                  disabled={isUpcomingMonth(index)}
                 />
                 <label
                   htmlFor={`checkbox-${month}`}
@@ -389,9 +313,8 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
           <input
             type="text"
             name="remainingAmount"
-            className={`${
-              remainingAmount == 0 ? "bg-green-200" : "bg-red-200"
-            } border w-1/2 px-5 py-3 focus:outline-none rounded-md`}
+            className={`${remainingAmount == 0 ? "bg-green-200" : "bg-red-200"
+              } border w-1/2 px-5 py-3 focus:outline-none rounded-md`}
             placeholder="Remaining Amount"
             value={remainingAmount}
             onChange={setFormData}

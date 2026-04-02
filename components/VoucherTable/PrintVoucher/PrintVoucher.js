@@ -18,7 +18,15 @@ const PrintVoucher = ({
   annualFund,
 }) => {
   const currentMonthIndex = new Date().getMonth();
-  const mapToYearMonth = (monthIndex) => (monthIndex + 9) % 12;
+  const currentYear = new Date().getFullYear();
+
+  // FIX: April (JS month 3) was returning 0 instead of 12
+  // (3 + 9) % 12 = 0, but April means all 12 months of the academic year have started
+  const mapToYearMonth = (monthIndex) => {
+    const result = (monthIndex + 9) % 12;
+    return result === 0 ? 12 : result;
+  };
+
   const currentYearMonth = mapToYearMonth(currentMonthIndex);
 
   const currentMonthsList = [
@@ -36,8 +44,25 @@ const PrintVoucher = ({
     "March",
   ];
 
+  // April–December belong to the previous calendar year (e.g. 2025)
+  // January–March belong to the current calendar year (e.g. 2026)
+  const getMonthYear = (month) => {
+    const prevYearMonths = [
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return prevYearMonths.includes(month) ? currentYear - 1 : currentYear;
+  };
+
   const getRemainingAmount = () => {
-    const currentFees = parseFloat(fees); // Assuming fees is a number
+    const currentFees = parseFloat(fees);
     const monthsChecked = feesPaidMonths?.length || 0;
     const totalMonths = currentYearMonth;
     const remainingAmount = (
@@ -53,15 +78,18 @@ const PrintVoucher = ({
       return index < currentYearMonth && !feesPaidMonths?.includes(month);
     });
 
-    if (unpaidMonths.length > 0) {
-      if (unpaidMonths.length > 1) {
-        return `Prev Months Fees (${unpaidMonths.join(", ")})`;
-      } else {
-        return `Prev Month Fees (${unpaidMonths.join(", ")})`;
-      }
-    } else {
-      return "-";
-    }
+    if (unpaidMonths.length === 0) return "-";
+
+    const label =
+      unpaidMonths.length > 1 ? "Prev Months Fees" : "Prev Month Fees";
+
+    // Conditionally show year: only stamp year if it differs from current calendar year
+    const formatted = unpaidMonths.map((month) => {
+      const year = getMonthYear(month);
+      return year !== currentYear ? `${month} ${year}` : month;
+    });
+
+    return `${label} (${formatted.join(", ")})`;
   };
 
   return (
@@ -94,8 +122,8 @@ const PrintVoucher = ({
                         index === 0
                           ? "Bank Copy"
                           : index === 1
-                          ? "School Copy"
-                          : "Student Copy"
+                            ? "School Copy"
+                            : "Student Copy"
                       }
                       annualFund={annualFund}
                     />

@@ -122,7 +122,7 @@ const Design = ({
 
   const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
   const expiryDate = `${'25'}/${formattedMonth}/${year}`;
-  const dueDate = `${"13"}/${formattedMonth}/${year}`;
+  const dueDate = `${"15"}/${formattedMonth}/${year}`;
 
 
   const getOtherFees = () => {
@@ -642,7 +642,7 @@ const Design = ({
           <div className="flex items-center justify-center">
             <h4 className="p-2 text-xs font-medium">
               {`Note: Fees due by ${monthNames[currentDate.getMonth()]
-                } 13,${currentDate.getFullYear()}`}
+                } 15,${currentDate.getFullYear()}`}
               , to avoid Rs 200/= late fee.
             </h4>
           </div>

@@ -22,42 +22,46 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
 
   useEffect(() => {
     if (data) {
-      setFeesPaidMonths(data.feesPaidMonths || []);
+      setFeesPaidMonths((data.feesPaidMonths || []).map(normalizeEntry));
       setlateFees(data.lateFees || 0);
     }
   }, [data]);
 
-  const months = [
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-    "January",
-    "February",
-    "March",
-  ];
+  // ── Rolling 12-month window ────────────────────────────────────────────────
+  // Rule: months with calendar index <= current month index  → current year
+  //       months with calendar index >  current month index  → previous year
+  // This always gives a window of exactly the past 12 months ending at today.
+  // ALL 12 slots are past/current, so ALL checkboxes are enabled.
+  // Example (May 2026): April→2026, March→2026, June→2025, December→2025
 
-  const currentMonthIndex = new Date().getMonth();
-
-  // FIX: April (JS month 3) was returning 0 instead of 12
-  // (3 + 9) % 12 = 0, but April means all 12 months of the academic year have started
-  const mapToYearMonth = (monthIndex) => {
-    const result = (monthIndex + 9) % 12;
-    return result === 0 ? 12 : result;
+  const MONTH_INDEX = {
+    January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+    July: 6, August: 7, September: 8, October: 9, November: 10, December: 11,
   };
 
-  const currentYearMonth = mapToYearMonth(currentMonthIndex);
+  const now = new Date();
+  const currentMonthIdx = now.getMonth();   // 0–11
+  const currentCalYear = now.getFullYear();
 
-  // FIX: isUpcomingMonth now uses academic index (0–11) directly,
-  // compared against currentYearMonth. No more targetMonth/myMonth switch tables needed.
-  // e.g. in April: currentYearMonth=12, so index > 12 is never true → all months enabled ✓
-  // e.g. in May:   currentYearMonth=1,  so index > 1 disables June–March ✓
-  const isUpcomingMonth = (index) => index >= currentYearMonth;
+  const getYearForMonth = (monthName) =>
+    MONTH_INDEX[monthName] <= currentMonthIdx ? currentCalYear : currentCalYear - 1;
+
+  const getLabel = (monthName) => `${monthName} ${getYearForMonth(monthName)}`;
+
+  // Academic display order (April → March)
+  const academicMonths = [
+    "April", "May", "June", "July", "August", "September",
+    "October", "November", "December", "January", "February", "March",
+  ];
+
+  // Normalize a DB entry (plain "April" or already "April 2026") → labelled string
+  const normalizeEntry = (entry) => {
+    if (/\d{4}/.test(entry)) return entry;
+    return getLabel(entry);
+  };
+
+  // All 12 slots are past/current → no upcoming months, all checkboxes enabled
+  const isUpcomingMonth = (_index) => false;
 
   const UpdateMutation = useMutation(
     (newData) => updateStudent(formId, newData),
@@ -94,15 +98,14 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
 
   let lateFeesAmount = parseFloat(lateFees);
   const currentFees = parseFloat(fees);
-  const monthsChecked = feesPaidMonths.length;
 
-  // FIX: was currentYearMonth + 1, which overcounted by 1 every month
-  // and produced massive negatives in April when currentYearMonth was wrongly 0
-  const totalMonths = currentYearMonth;
+  // All 12 academic slots are payable; count how many labels are in the paid list
+  const allLabels = academicMonths.map(getLabel);
+  const monthsChecked = feesPaidMonths.filter((e) => allLabels.includes(e)).length;
+  const totalMonths = 12;
 
   const remainingAmount = (
-    currentFees * (monthsChecked > totalMonths ? 0 : totalMonths - monthsChecked) +
-    lateFeesAmount
+    currentFees * Math.max(0, totalMonths - monthsChecked) + lateFeesAmount
   ).toFixed(2);
 
   const handleAddLateFees = () => {
@@ -111,8 +114,8 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
   };
 
   const handleClearAllDues = () => {
-    // FIX: was currentYearMonth + 1, now correctly uses currentYearMonth
-    const clearedMonths = months.slice(0, currentYearMonth);
+    // Mark all 12 academic months (with correct years) as paid
+    const clearedMonths = academicMonths.map(getLabel);
     setFeesPaidMonths(clearedMonths);
     setlateFees(0);
   };
@@ -269,40 +272,33 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
 
         <div className="input-type mt-2">
           <span className="text-base font-medium px-1">Fees Paid: </span>
-          {months.map((month, index) => {
+          {academicMonths.map((month) => {
+            const label = getLabel(month);
             return (
               <div
-                key={month}
+                key={label}
                 className="form-check"
                 style={{ display: "inline-block", marginRight: "10px" }}
               >
                 <input
                   type="checkbox"
-                  id={`checkbox-${month}`}
-                  name={`checkbox-${month}`}
+                  id={`checkbox-${label}`}
+                  name={`checkbox-${label}`}
                   className="form-check-input mr-1"
                   onChange={(e) => {
-                    if (!isUpcomingMonth(index)) {
-                      if (e.target.checked) {
-                        setFeesPaidMonths((prevMonths) => [
-                          ...prevMonths,
-                          month,
-                        ]);
-                      } else {
-                        setFeesPaidMonths((prevMonths) =>
-                          prevMonths.filter((m) => m !== month)
-                        );
-                      }
+                    if (e.target.checked) {
+                      setFeesPaidMonths((prev) => [...prev, label]);
+                    } else {
+                      setFeesPaidMonths((prev) => prev.filter((m) => m !== label));
                     }
                   }}
-                  checked={feesPaidMonths.includes(month)}
-                  disabled={isUpcomingMonth(index)}
+                  checked={feesPaidMonths.includes(label)}
                 />
                 <label
-                  htmlFor={`checkbox-${month}`}
+                  htmlFor={`checkbox-${label}`}
                   className="inline-block text-gray-800"
                 >
-                  {month}
+                  {label}
                 </label>
               </div>
             );

@@ -16,78 +16,41 @@ const StudentFeeReceipt = ({ student, voucherCode, annualFund }) => {
     fees,
   } = student;
 
-  const currentMonthIndex = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-
-  
-  const mapToYearMonth = (monthIndex) => {
-    const result = (monthIndex + 9) % 12;
-    return result === 0 ? 12 : result;
+  // ── Rolling 12-month window ────────────────────────────────────────────────
+  const MONTH_INDEX = {
+    January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+    July: 6, August: 7, September: 8, October: 9, November: 10, December: 11,
   };
+  const now = new Date();
+  const currentMonthIdx = now.getMonth();
+  const currentCalYear = now.getFullYear();
 
-  const currentYearMonth = mapToYearMonth(currentMonthIndex);
+  const getYearForMonth = (monthName) =>
+    MONTH_INDEX[monthName] <= currentMonthIdx ? currentCalYear : currentCalYear - 1;
 
-  const currentMonthsList = [
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-    "January",
-    "February",
-    "March",
+  const getLabel = (monthName) => `${monthName} ${getYearForMonth(monthName)}`;
+
+  const academicMonths = [
+    "April", "May", "June", "July", "August", "September",
+    "October", "November", "December", "January", "February", "March",
   ];
 
-  // April–December belong to the previous calendar year (e.g. 2025)
-  // January–March belong to the current calendar year (e.g. 2026)
-  const getMonthYear = (month) => {
-    const prevYearMonths = [
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return prevYearMonths.includes(month) ? currentYear - 1 : currentYear;
-  };
+  const normalizeEntry = (entry) => /\d{4}/.test(entry) ? entry : getLabel(entry);
+
+  const normalizedPaid = (feesPaidMonths || []).map(normalizeEntry);
+  const allLabels = academicMonths.map(getLabel);
 
   const getRemainingAmount = () => {
     const currentFees = parseFloat(fees);
-    const monthsChecked = feesPaidMonths?.length || 0;
-    const totalMonths = currentYearMonth;
-    const remainingAmount = (
-      currentFees *
-      (monthsChecked > totalMonths ? 0 : totalMonths - monthsChecked)
-    ).toFixed(2);
-
-    return remainingAmount;
+    const paidCount = normalizedPaid.filter((e) => allLabels.includes(e)).length;
+    return (currentFees * Math.max(0, 12 - paidCount)).toFixed(2);
   };
 
   const getUnpaidMonths = () => {
-    const unpaidMonths = currentMonthsList.filter((month, index) => {
-      return index < currentYearMonth && !feesPaidMonths?.includes(month);
-    });
-
-    if (unpaidMonths.length === 0) return "-";
-
-    const label =
-      unpaidMonths.length > 1 ? "Prev Months Fees" : "Prev Month Fees";
-
-    // Conditionally show year: only stamp year if it differs from current calendar year
-    const formatted = unpaidMonths.map((month) => {
-      const year = getMonthYear(month);
-      return year !== currentYear ? `${month} ${year}` : month;
-    });
-
-    return `${label} (${formatted.join(", ")})`;
+    const unpaid = allLabels.filter((l) => !normalizedPaid.includes(l));
+    if (unpaid.length === 0) return "-";
+    const label = unpaid.length > 1 ? "Prev Months Fees" : "Prev Month Fees";
+    return `${label} (${unpaid.join(", ")})`;
   };
 
   return (

@@ -212,7 +212,7 @@ export default function AddUserForm({ formData, setFormData }) {
             required
             onChange={setFormData}
             className="border ml-1 w-1/4 px-5 py-3 focus:outline-none rounded-md"
-            placeholder="Security"
+            placeholder="Annual Fees"
           />
           <input
             type="text"

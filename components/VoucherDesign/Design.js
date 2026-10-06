@@ -481,7 +481,7 @@ const Design = ({
                     className="inline-flex items-center justify-center text-xs"
                     style={{ width: "75%" }}
                   >
-                                        Annual Fees (Yearly)
+                                        Annual Fees
                   </td>
                   <td
                     className="inline-flex items-center justify-center text-xs"
